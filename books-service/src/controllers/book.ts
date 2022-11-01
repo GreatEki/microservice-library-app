@@ -60,3 +60,32 @@ export const getBook = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const deleteBook = async (req: Request, res: Response) => {
+  try {
+    const { bookId } = req.params;
+
+    const delBook = await Book.findOneAndRemove({ _id: bookId });
+
+    if (!delBook)
+      throw new ApplicationError(
+        "Invalid Id supplied for book in request params",
+        "Bad Request",
+        401
+      );
+
+    return res.status(200).json({
+      success: true,
+      status: "OK",
+      statusCode: 200,
+      message: "Book deleted",
+    });
+  } catch (err) {
+    return res.status(err.statusCode || 500).json({
+      success: false,
+      status: err.status || "Server Error",
+      statusCode: err.statusCode || 500,
+      message: err.message,
+    });
+  }
+};

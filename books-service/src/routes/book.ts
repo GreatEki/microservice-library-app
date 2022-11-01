@@ -7,6 +7,9 @@ router.route("/add-book").post(BookController.createBook);
 
 router.route("/").get(BookController.getAllBooks);
 
-router.route("/:bookId").get(BookController.getBook);
+router
+  .route("/:bookId")
+  .get(BookController.getBook)
+  .delete(BookController.deleteBook);
 
 export default router;
