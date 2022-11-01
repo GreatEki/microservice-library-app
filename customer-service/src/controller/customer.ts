@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Customer } from "../model";
+import ApplicationError from "../error/ApplicationError";
 
 export const createCustomer = async (req: Request, res: Response) => {
   try {
@@ -38,6 +39,35 @@ export const getCustomers = async (req: Request, res: Response) => {
       statusCode: 200,
       message: "All customers returned",
       data: customers,
+    });
+  } catch (err) {
+    return res.status(err.statusCode || 500).json({
+      success: false,
+      status: err.status || "Server error",
+      statusCode: err.statusCode || 500,
+      message: err.message,
+    });
+  }
+};
+
+export const getCustomer = async (req: Request, res: Response) => {
+  try {
+    const { customerId } = req.params;
+    const customer = await Customer.findById(customerId);
+
+    if (!customer)
+      throw new ApplicationError(
+        "No customer found for id supplied",
+        "Bad Request",
+        404
+      );
+
+    return res.status(200).json({
+      success: true,
+      status: "OK",
+      statusCode: 200,
+      message: "Customer retrieved successfully",
+      data: customer,
     });
   } catch (err) {
     return res.status(err.statusCode || 500).json({

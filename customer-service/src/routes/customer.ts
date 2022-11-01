@@ -7,4 +7,6 @@ router.route("/create").post(CustomerController.createCustomer);
 
 router.route("/").get(CustomerController.getCustomers);
 
+router.route("/:customerId").get(CustomerController.getCustomer);
+
 export default router;
