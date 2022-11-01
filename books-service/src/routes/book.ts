@@ -7,4 +7,6 @@ router.route("/add-book").post(BookController.createBook);
 
 router.route("/").get(BookController.getAllBooks);
 
+router.route("/:bookId").get(BookController.getBook);
+
 export default router;

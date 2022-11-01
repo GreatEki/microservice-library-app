@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Book } from "../model";
+import ApplicationError from "../error/ApplicationError";
 
 export const createBook = async (req: Request, res: Response) => {
   try {
@@ -34,6 +35,27 @@ export const getAllBooks = async (req: Request, res: Response) => {
   } catch (err) {
     return res.status(err.statusCode || 500).json({
       success: false,
+      message: err.message,
+    });
+  }
+};
+
+export const getBook = async (req: Request, res: Response) => {
+  try {
+    const { bookId } = req.params;
+
+    const book = await Book.findById(bookId);
+
+    if (!book) throw new ApplicationError("Book Not Found", "Bad Request", 404);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Book returned", data: book });
+  } catch (err) {
+    return res.status(err.statusCode || 500).json({
+      success: false,
+      status: err.status || "Server error",
+      statusCode: err.statusCode || 500,
       message: err.message,
     });
   }
